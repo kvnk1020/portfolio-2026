@@ -33,20 +33,24 @@ const hasReflections = hasRealContent(reflectionsRaw, REFLECTIONS_PLACEHOLDER);
 // markdown renderer for a couple of paragraphs.
 const slidesParagraphs = slidesRaw.split(/\n\n+/);
 const reflectionsParagraphs = reflectionsRaw.split(/\n\n+/);
+
+// No project has real reflections content yet — hide the section
+// site-wide until there's something to show, without deleting the markup.
+const SHOW_REFLECTIONS = false;
 ---
 
 <Layout title={`${title} — Kevin Ku`}>
 	<main id="top">
 		<section class="bg-surface-sunken">
-			<div class="mx-auto max-w-6xl px-6 pt-16 pb-16 md:px-12 md:pt-24 md:pb-24">
+			<div class="py-16 md:py-24">
 				{thumbnail ? (
 					<img
 						src={thumbnail}
 						alt={`${title} case study screenshot`}
-						class="aspect-video w-full rounded-2xl object-cover"
+						class="aspect-video w-full object-cover"
 					/>
 				) : (
-					<div class="aspect-video w-full rounded-2xl bg-neutral-200" />
+					<div class="aspect-video w-full bg-neutral-200" />
 				)}
 			</div>
 		</section>
@@ -96,33 +100,34 @@ const reflectionsParagraphs = reflectionsRaw.split(/\n\n+/);
 
 		<section class="bg-surface">
 			<div class="mx-auto max-w-6xl px-6 pb-16 md:px-12 md:pb-24">
-				<h2 class="text-sm font-semibold tracking-wide text-ink-muted uppercase">Slides</h2>
 				{hasSlides ? (
-					<div class="mt-4 space-y-4 leading-relaxed text-ink-muted">
+					<div class="space-y-4 leading-relaxed text-ink-muted">
 						{slidesParagraphs.map((paragraph) => <p>{paragraph}</p>)}
 					</div>
 				) : (
-					<div class="mt-4 flex aspect-video w-full items-center justify-center rounded-2xl border border-dashed border-border text-sm text-ink-muted">
+					<div class="flex aspect-video w-full items-center justify-center rounded-2xl border border-dashed border-border text-sm text-ink-muted">
 						Slide deck coming soon
 					</div>
 				)}
 			</div>
 		</section>
 
-		<section class="bg-surface">
-			<div class="mx-auto max-w-6xl px-6 pb-16 md:px-12 md:pb-24">
-				<h2 class="text-sm font-semibold tracking-wide text-ink-muted uppercase">Reflections</h2>
-				{hasReflections ? (
-					<div class="mt-4 space-y-4 leading-relaxed text-ink-muted">
-						{reflectionsParagraphs.map((paragraph) => <p>{paragraph}</p>)}
-					</div>
-				) : (
-					<div class="mt-4 flex min-h-24 w-full items-center justify-center rounded-2xl border border-dashed border-border text-sm text-ink-muted">
-						Reflections coming soon
-					</div>
-				)}
-			</div>
-		</section>
+		{SHOW_REFLECTIONS && (
+			<section class="bg-surface">
+				<div class="mx-auto max-w-6xl px-6 pb-16 md:px-12 md:pb-24">
+					<h2 class="text-sm font-semibold tracking-wide text-ink-muted uppercase">Reflections</h2>
+					{hasReflections ? (
+						<div class="mt-4 space-y-4 leading-relaxed text-ink-muted">
+							{reflectionsParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+						</div>
+					) : (
+						<div class="mt-4 flex min-h-24 w-full items-center justify-center rounded-2xl border border-dashed border-border text-sm text-ink-muted">
+							Reflections coming soon
+						</div>
+					)}
+				</div>
+			</section>
+		)}
 
 		<section class="bg-surface">
 			<div class="mx-auto flex max-w-6xl flex-col items-end gap-2 px-6 pb-16 md:px-12 md:pb-24">

@@ -14,7 +14,7 @@ const icons: Record<Props["label"], string> = {
 };
 ---
 
-<div class="rounded-2xl border border-border p-6 md:p-8">
+<div class="rounded-2xl p-6 md:p-8">
 	<div class="flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent" set:html={icons[label]} />
 	<h3 class="mt-5 text-lg font-semibold text-ink md:text-xl">
 		<span class="text-accent">{label}:</span> {subhead}
