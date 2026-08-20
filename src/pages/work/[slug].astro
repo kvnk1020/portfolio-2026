@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const projects = await getCollection('projects');
+	return projects.map((project) => ({
+		params: { slug: project.id },
+		props: { project },
+	}));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const { title, framing_line, company, role, timeline, team, pills } = project.data;
+---
+
+<Layout title={title}>
+	<h1>{title}</h1>
+	<p>{framing_line}</p>
+	<dl>
+		<dt>Company</dt>
+		<dd>{company}</dd>
+		<dt>Role</dt>
+		<dd>{role}</dd>
+		<dt>Timeline</dt>
+		<dd>{timeline}</dd>
+		<dt>Team</dt>
+		<dd>
+			<ul>
+				{team.map((member) => <li>{member}</li>)}
+			</ul>
+		</dd>
+		<dt>Pills</dt>
+		<dd>{pills.join(', ')}</dd>
+	</dl>
+	<Content />
+</Layout>
