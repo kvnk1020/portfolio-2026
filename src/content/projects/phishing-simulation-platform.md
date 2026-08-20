@@ -8,7 +8,7 @@ team:
   - Nate H. — Project Manager
   - Dominic C. — Engineering Manager
   - Yarong T. — Senior Full-Stack Engineer
-thumbnail:
+thumbnail: /images/phishing-simulation-platform/hero.png
 pills: []
 ---
 

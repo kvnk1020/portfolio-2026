@@ -1,0 +1,26 @@
+---
+const links = [
+  { label: "Work", href: "/work/" },
+  { label: "About Me", href: "/about/" },
+  { label: "Resume", href: "#" },
+];
+---
+
+<header class="bg-surface-sunken">
+	<nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6 md:px-12">
+		<a href="/" aria-label="Kevin Ku, home" class="flex items-center">
+			<svg width="32" height="28" viewBox="0 0 32 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M0 0H7V28H0V0Z" fill="var(--color-ink)" />
+				<path d="M9 14L22 0H31L18 14L31 28H22L9 14Z" fill="var(--color-ink)" />
+				<path d="M22 14L14 5.5V22.5L22 14Z" fill="var(--color-accent)" />
+			</svg>
+		</a>
+		<ul class="flex items-center gap-8 text-sm text-ink md:gap-14">
+			{links.map((link) => (
+				<li>
+					<a href={link.href} class="transition-colors hover:text-accent">{link.label}</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+</header>

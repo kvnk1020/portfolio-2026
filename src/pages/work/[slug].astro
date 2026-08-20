@@ -1,38 +1,146 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import StarCard from '../../components/StarCard.astro';
+import {
+	parseStarSections,
+	extractSection,
+	hasRealContent,
+	SLIDES_PLACEHOLDER,
+	REFLECTIONS_PLACEHOLDER,
+} from '../../lib/parseProjectSummary';
 
 export async function getStaticPaths() {
 	const projects = await getCollection('projects');
-	return projects.map((project) => ({
+	return projects.map((project, index) => ({
 		params: { slug: project.id },
-		props: { project },
+		props: { project, nextProject: projects[(index + 1) % projects.length] },
 	}));
 }
 
-const { project } = Astro.props;
-const { Content } = await render(project);
-const { title, framing_line, company, role, timeline, team, pills } = project.data;
+const { project, nextProject } = Astro.props;
+const { title, framing_line, company, role, timeline, team, thumbnail } = project.data;
+
+const body = project.body ?? '';
+const starSections = parseStarSections(body);
+const slidesRaw = extractSection(body, 'Slides');
+const reflectionsRaw = extractSection(body, 'Reflections');
+const hasSlides = hasRealContent(slidesRaw, SLIDES_PLACEHOLDER);
+const hasReflections = hasRealContent(reflectionsRaw, REFLECTIONS_PLACEHOLDER);
+
+// Slides/Reflections bodies are short, plain prose by convention (see
+// case-study-outline.md) — split on blank lines rather than pulling in a
+// markdown renderer for a couple of paragraphs.
+const slidesParagraphs = slidesRaw.split(/\n\n+/);
+const reflectionsParagraphs = reflectionsRaw.split(/\n\n+/);
 ---
 
-<Layout title={title}>
-	<h1>{title}</h1>
-	<p>{framing_line}</p>
-	<dl>
-		<dt>Company</dt>
-		<dd>{company}</dd>
-		<dt>Role</dt>
-		<dd>{role}</dd>
-		<dt>Timeline</dt>
-		<dd>{timeline}</dd>
-		<dt>Team</dt>
-		<dd>
-			<ul>
-				{team.map((member) => <li>{member}</li>)}
-			</ul>
-		</dd>
-		<dt>Pills</dt>
-		<dd>{pills.join(', ')}</dd>
-	</dl>
-	<Content />
+<Layout title={`${title} — Kevin Ku`}>
+	<main id="top">
+		<section class="bg-surface-sunken">
+			<div class="mx-auto max-w-6xl px-6 pt-16 pb-16 md:px-12 md:pt-24 md:pb-24">
+				{thumbnail ? (
+					<img
+						src={thumbnail}
+						alt={`${title} case study screenshot`}
+						class="aspect-video w-full rounded-2xl object-cover"
+					/>
+				) : (
+					<div class="aspect-video w-full rounded-2xl bg-neutral-200" />
+				)}
+			</div>
+		</section>
+
+		<section class="bg-surface">
+			<div class="mx-auto max-w-6xl px-6 py-16 md:px-12 md:py-24">
+				<div class="grid gap-10 md:grid-cols-2 md:gap-16">
+					<h1 class="text-5xl leading-[1.05] font-semibold tracking-tight text-ink md:text-6xl">
+						{title}
+					</h1>
+					<div>
+						<p class="text-lg leading-relaxed text-ink-muted md:text-xl">{framing_line}</p>
+						<dl class="mt-10 space-y-6">
+							<div>
+								<dt class="sr-only">Timeline</dt>
+								<dd class="text-sm text-ink-muted">{timeline}</dd>
+							</div>
+							<div>
+								<dt class="text-sm font-semibold text-ink">Role</dt>
+								<dd class="mt-1 text-sm text-ink-muted">{role}</dd>
+							</div>
+							<div>
+								<dt class="text-sm font-semibold text-ink">Company</dt>
+								<dd class="mt-1 text-sm text-ink-muted">{company}</dd>
+							</div>
+							<div>
+								<dt class="text-sm font-semibold text-ink">Team</dt>
+								<dd class="mt-1 space-y-0.5 text-sm text-ink-muted">
+									{team.map((member) => <p>{member}</p>)}
+								</dd>
+							</div>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="bg-surface">
+			<div class="mx-auto max-w-6xl px-6 pb-16 md:px-12 md:pb-24">
+				<div class="grid gap-6 md:grid-cols-3 md:gap-8">
+					{starSections.map((section) => (
+						<StarCard label={section.label} subhead={section.subhead} body={section.body} />
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="bg-surface">
+			<div class="mx-auto max-w-6xl px-6 pb-16 md:px-12 md:pb-24">
+				<h2 class="text-sm font-semibold tracking-wide text-ink-muted uppercase">Slides</h2>
+				{hasSlides ? (
+					<div class="mt-4 space-y-4 leading-relaxed text-ink-muted">
+						{slidesParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+					</div>
+				) : (
+					<div class="mt-4 flex aspect-video w-full items-center justify-center rounded-2xl border border-dashed border-border text-sm text-ink-muted">
+						Slide deck coming soon
+					</div>
+				)}
+			</div>
+		</section>
+
+		<section class="bg-surface">
+			<div class="mx-auto max-w-6xl px-6 pb-16 md:px-12 md:pb-24">
+				<h2 class="text-sm font-semibold tracking-wide text-ink-muted uppercase">Reflections</h2>
+				{hasReflections ? (
+					<div class="mt-4 space-y-4 leading-relaxed text-ink-muted">
+						{reflectionsParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+					</div>
+				) : (
+					<div class="mt-4 flex min-h-24 w-full items-center justify-center rounded-2xl border border-dashed border-border text-sm text-ink-muted">
+						Reflections coming soon
+					</div>
+				)}
+			</div>
+		</section>
+
+		<section class="bg-surface">
+			<div class="mx-auto flex max-w-6xl flex-col items-end gap-2 px-6 pb-16 md:px-12 md:pb-24">
+				<a
+					href="#top"
+					class="inline-flex items-center gap-1 text-sm text-ink-muted transition-colors hover:text-accent"
+				>
+					Back to top <span aria-hidden="true">↑</span>
+				</a>
+				{nextProject && (
+					<a
+						href={`/work/${nextProject.id}/`}
+						class="inline-flex items-center gap-2 text-2xl font-semibold tracking-tight text-ink transition-colors hover:text-accent md:text-3xl"
+					>
+						Next: {nextProject.data.title} <span aria-hidden="true">→</span>
+					</a>
+				)}
+			</div>
+		</section>
+	</main>
 </Layout>
