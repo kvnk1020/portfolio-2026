@@ -8,7 +8,7 @@ team:
   - Dieter J. - Design Director
   - Farreltin F. - Sr. Product Manager
   - Travis L. - Engineering Manager
-thumbnail:
+thumbnail: /images/sharepoint/hero.png
 pills: []
 ---
 

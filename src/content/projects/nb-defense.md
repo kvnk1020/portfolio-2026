@@ -8,7 +8,7 @@ team:
   - Chris King - Head of Product
   - Carter De Angelis - Sr. Product Designer
   - Josh Miles - Sr. Software Engineer
-thumbnail:
+thumbnail: /images/nb-defense/hero.jpg
 pills: []
 ---
 
