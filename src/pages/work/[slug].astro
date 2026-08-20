@@ -42,17 +42,15 @@ const SHOW_REFLECTIONS = false;
 <Layout title={`${title} — Kevin Ku`}>
 	<main id="top">
 		<section class="bg-surface-sunken">
-			<div class="py-16 md:py-24">
-				{thumbnail ? (
-					<img
-						src={thumbnail}
-						alt={`${title} case study screenshot`}
-						class="aspect-video w-full object-cover"
-					/>
-				) : (
-					<div class="aspect-video w-full bg-neutral-200" />
-				)}
-			</div>
+			{thumbnail ? (
+				<img
+					src={thumbnail}
+					alt={`${title} case study screenshot`}
+					class="aspect-video w-full object-cover"
+				/>
+			) : (
+				<div class="aspect-video w-full bg-neutral-200" />
+			)}
 		</section>
 
 		<section class="bg-surface">
