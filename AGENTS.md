@@ -37,7 +37,7 @@ section — don't guess at structure or content that's already documented there.
 
 ## Stack
 
-- Astro v5 (Content Collections for case studies)
+- Astro v7 (Content Collections for case studies)
 - Tailwind CSS v4
 - GitHub Pages (deploy via `.github/workflows/deploy.yml`, Astro's official action)
 - shadcn/ui preset — scoped to component styling tokens only, not layout/structure
